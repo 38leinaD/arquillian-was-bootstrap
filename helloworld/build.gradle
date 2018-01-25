@@ -1,0 +1,42 @@
+plugins {
+    // for bom-support
+    id 'nebula.dependency-recommender' version '4.1.2'
+}
+
+apply plugin: 'war'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    // mavenLocal is important as the WAS libraries are only installed locally
+    mavenLocal()
+    jcenter()
+}
+
+dependencyRecommendations {
+    mavenBom module: 'org.jboss.arquillian:arquillian-bom:1.2.0.Final'
+}
+
+dependencies {
+    providedCompile 'javax:javaee-api:7.0'
+    testCompile 'junit:junit:4.12'
+
+    testCompile "org.jboss.arquillian.junit:arquillian-junit-container"
+    testRuntime "org.jboss.arquillian.protocol:arquillian-protocol-servlet:1.1.4.Final"
+    testRuntime "org.jboss.arquillian.container:arquillian-was-remote-9:1.0.0.Final-SNAPSHOT"
+    
+    testRuntime "com.ibm:ibmorb:1.0"
+    testRuntime "com.ibm:com.ibm.ws.admin.client.forJython21_9.0:1.0"
+    testRuntime "com.ibm:com.ibm.ws.orb_8.5.0:1.0"
+}
+
+test {
+    // Not needed as set to default
+    //systemProperty 'arquillian.launch', 'arquillian-was-remote'
+    executable = "/home/daniel/junk/arquillian-was/ibmjava/bin/java"
+}
+
+war {
+    archiveName 'helloworld.war'
+}
